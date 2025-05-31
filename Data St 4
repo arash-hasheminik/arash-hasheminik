@@ -1,0 +1,91 @@
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.prev = self.next = None
+
+class CircularDoublyLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            new_node.next = new_node.prev = new_node
+            return
+
+        tail = self.head.prev
+        tail.next = new_node
+        new_node.prev = tail
+        new_node.next = self.head
+        self.head.prev = new_node
+
+    def display(self):
+        result = []
+        if not self.head:
+            print("لیست خالی است")
+            return
+        current = self.head
+        while True:
+            result.append(current.data)
+            current = current.next
+            if current == self.head:
+                break
+        print("لیست:", result)
+
+    def del_after(self, x):
+        if not self.head:
+            return
+        current = self.head
+        while True:
+            if current.data == x:
+                target = current.next
+                if target == self.head and self.head.next == self.head:
+                    self.head = None
+                else:
+                    current.next = target.next
+                    target.next.prev = current
+                    if target == self.head:
+                        self.head = target.next
+                return
+            current = current.next
+            if current == self.head:
+                break
+
+    def del_before(self, x):
+        if not self.head:
+            return
+        current = self.head
+        while True:
+            if current.data == x:
+                target = current.prev
+                if target == self.head and self.head.next == self.head:
+                    self.head = None
+                else:
+                    target.prev.next = current
+                    current.prev = target.prev
+                    if target == self.head:
+                        self.head = target.next
+                return
+            current = current.next
+            if current == self.head:
+                break
+
+    def del_x(self, x):
+        if not self.head:
+            return
+        current = self.head
+        while True:
+            if current.data == x:
+                if current.next == current:  # فقط یک گره
+                    self.head = None
+                    return
+                else:
+                    current.prev.next = current.next
+                    current.next.prev = current.prev
+                    if current == self.head:
+                        self.head = current.next
+                    return
+            current = current.next
+            if current == self.head:
+                break
